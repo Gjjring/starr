@@ -14,7 +14,7 @@ class Canvas():
         background = fig.canvas.copy_from_bbox(axes.bbox)
         self.writer = FFMpegWriter(fps=10)
 
-    def set_view_port(self,     view_port):
+    def set_view_port(self, view_port):
         self.view_port = view_port
         self.axes.set_xlim([-view_port, view_port])
         self.axes.set_ylim([-view_port, view_port])

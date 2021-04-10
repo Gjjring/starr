@@ -4,6 +4,6 @@ import starr.geometry_component
 import starr.physics_component
 import starr.graphics_component
 import starr.canvas
-
+import starr.topology
 __all__ = ["Simulation", "SimulationObject", "GeometryComponent",
            "PhysicsComponent", "GraphicsComponent", "Canvas"]
