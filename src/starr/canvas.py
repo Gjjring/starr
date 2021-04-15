@@ -5,6 +5,7 @@ class Canvas():
     def __init__(self, fig, axes):
         self.fig = fig
         self.axes = axes
+        self.fps =10
         view_port = 80
         self.view_port = view_port
         self.axes.set_xlim([-view_port, view_port])
@@ -12,7 +13,7 @@ class Canvas():
         self.fig.canvas.draw()
         self.report_text = None
         background = fig.canvas.copy_from_bbox(axes.bbox)
-        self.writer = FFMpegWriter(fps=10)
+        self.writer = None
 
     def set_view_port(self, view_port):
         self.view_port = view_port
@@ -20,14 +21,19 @@ class Canvas():
         self.axes.set_ylim([-view_port, view_port])
         self.fig.canvas.draw()
 
-    def saving(self):
-        dpi = 100
+    def saving(self, dpi=100, fps=10):
+        self.fps = fps
+        self.writer = FFMpegWriter(fps=self.fps)
         self.writer.setup(self.fig, "writer_test.mp4", dpi)
 
     def write(self):
+        if self.writer is None:
+            raise ValueError("writer has not been initialised, try calling Canvas.saving()")
         self.writer.grab_frame()
 
     def finish(self):
+        if self.writer is None:
+            raise ValueError("writer has not been initialised, try calling Canvas.saving()")
         self.writer.finish()
         self.writer.cleanup()
 
