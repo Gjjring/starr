@@ -95,9 +95,11 @@ class Simulation():
                     new_obj_group.update(0.0, self.world, self.canvas)
                     self.object_groups.append(new_obj_group)
 
-
-
-
+    def all_objects(self):
+        obj_list = []
+        for group in self.object_groups:
+            obj_list += group.objects
+        return obj_list
 
     def arange_regular_grid(self, grid_kws, group='all'):
         """
@@ -208,7 +210,7 @@ class Simulation():
         finally:
             self.canvas.finish()
 
-    def detect_first_collision(time_step):
+    def detect_first_collision(self, time_step):
         buffer_group = ObjectGroup()
         if self.world.buffer is not None:
             buffer_group.append(self.world.buffer)

@@ -10,6 +10,7 @@ GeneralPolygon
 
 import numpy as np
 from abc import ABC, abstractmethod
+import matplotlib.pyplot as plt
 import shapely.geometry
 from shapely.geometry.point import Point
 from shapely.geometry.linestring import LineString
@@ -18,7 +19,12 @@ import shapely.affinity as affinity
 from starr.misc import pairwise
 from shapely.ops import unary_union
 
-def minimum_edge_length(polygon):
+def plot_line_string(line_string, color='k'):
+    x = [line_string.coords[0][0], line_string.coords[1][0]]
+    y = [line_string.coords[0][1], line_string.coords[1][1]]
+    plt.plot(x,y, lw=3.0, color=color, zorder=10)
+
+def minimum_edge_length(polygon, plot_segments=False):
     min_size = np.inf
     #previous_point = Point(polygon.coords[-1])
     for ip, point_tuple in enumerate(polygon.coords):
@@ -27,6 +33,9 @@ def minimum_edge_length(polygon):
             previous_point = point
             continue
         distance = point.distance(previous_point)
+        if plot_segments:
+            line_string = LineString([previous_point, point])
+            plot_line_string(line_string, color='orange')
         if distance < min_size:
             min_size = distance
         previous_point = point
@@ -37,7 +46,13 @@ def make_union(object_list):
     for obj in object_list:
         all_polygons.append(obj.geometry.polygon)
     union = unary_union(all_polygons)
-    return union
+    if isinstance(union, shapely.geometry.polygon.Polygon):
+        multi_poly = False
+    elif isinstance(union, shapely.geometry.multipolygon.MultiPolygon):
+        multi_poly = True
+    else:
+        raise ValueError("unknown result of polygon union")
+    return union, multi_poly
 
 
 
