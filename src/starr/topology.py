@@ -30,7 +30,7 @@ def get_minimum_intersection(poly1, poly2, plot_segments=False):
         if not difference.is_empty:
             try:
                 boundary = difference.exterior
-            except AttributeError as exp:                
+            except AttributeError as exp:
                 raise exp
             min_intersect = minimum_edge_length(boundary, plot_segments=plot_segments)
     return min_intersect
@@ -49,7 +49,6 @@ class TopologySimulation(Simulation):
         union2 = make_union(self.object_groups[group2].objects)[0]
         valid_intersection = False
         if union1.intersects(union2):
-            print(union1.intersection(union2))
             intersection = union1.intersection(union2)
             if (isinstance(intersection,shapely.geometry.Polygon) or
                 isinstance(intersection,shapely.geometry.MultiPolygon)):
