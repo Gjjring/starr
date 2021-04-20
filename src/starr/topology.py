@@ -30,9 +30,7 @@ def get_minimum_intersection(poly1, poly2, plot_segments=False):
         if not difference.is_empty:
             try:
                 boundary = difference.exterior
-            except AttributeError as exp:
-                for point in poly1.exterior.coords:
-                    print("{},".format(point))
+            except AttributeError as exp:                
                 raise exp
             min_intersect = minimum_edge_length(boundary, plot_segments=plot_segments)
     return min_intersect
