@@ -28,7 +28,12 @@ def get_minimum_intersection(poly1, poly2, plot_segments=False):
     if poly1.intersects(poly2):
         difference = poly1.difference(poly2)
         if not difference.is_empty:
-            boundary = difference.exterior
+            try:
+                boundary = difference.exterior
+            except AttributeError as exp:
+                for point in poly1.exterior.coords:
+                    print("{},".format(point))
+                raise exp
             min_intersect = minimum_edge_length(boundary, plot_segments=plot_segments)
     return min_intersect
 
@@ -44,7 +49,22 @@ class TopologySimulation(Simulation):
     def group_intersects(self, group1, group2):
         union1 = make_union(self.object_groups[group1].objects)[0]
         union2 = make_union(self.object_groups[group2].objects)[0]
-        return union1.intersects(union2)
+        valid_intersection = False
+        if union1.intersects(union2):
+            print(union1.intersection(union2))
+            intersection = union1.intersection(union2)
+            if (isinstance(intersection,shapely.geometry.Polygon) or
+                isinstance(intersection,shapely.geometry.MultiPolygon)):
+                valid_intersection = True
+            elif isinstance(intersection, shapely.geometry.collection.GeometryCollection):
+                all_poly = True
+                for item in intersection:
+                    if (not isinstance(intersection,shapely.geometry.Polygon) and
+                        not isinstance(intersection,shapely.geometry.MultiPolygon)):
+                        all_poly =False
+                        break
+                valid_intersection = all_poly
+        return valid_intersection
 
     def get_minimum_feature_size_group(self, group):
         return self.get_minimum_feature_size_world_intersection(group)
@@ -110,6 +130,7 @@ class TopologySimulation(Simulation):
             distance_exterior = minimum_edge_length(exterior, plot_segments=plot_segments)
             #interiors = union.interiors
             min_size = np.inf
+            distance_interior = np.inf
             for poly in union.interiors:
                 distance_interior = minimum_edge_length(poly, plot_segments=plot_segments)
                 if distance_interior < min_size:
@@ -120,6 +141,7 @@ class TopologySimulation(Simulation):
 
     def get_minimum_feature_size_all(self):
         return self.get_minimum_feature_size_self_intersection(group='all')
+
 
     def get_minimum_feature_size_self_intersection(self, group='all'):
         """
