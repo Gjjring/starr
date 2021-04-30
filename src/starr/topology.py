@@ -135,6 +135,28 @@ class TopologySimulation(Simulation):
             min_size = np.min([distance_exterior, distance_interior])
         return min_size
 
+    def get_minimum_distance_to_world(self, group='all'):
+        if isinstance(group, int):
+            obj_list = self.object_groups[group].objects
+        else:
+            obj_list = self.all_objects()
+        #object_group = self.object_groups[group]
+        min_size = np.inf
+        union, multi_poly = make_union(obj_list)
+        poly2 = self.world.buffer.geometry.polygon
+        if multi_poly:
+            for poly in union:
+                distance = poly.exterior.distance(poly2)
+                if distance < min_size:
+                    min_size = distance
+        else:
+            exterior = union.exterior
+            distance = union.exterior.distance(poly2)
+            if distance < min_size:
+                min_size = distance
+
+        return min_size
+
 
     def get_minimum_feature_size_all(self):
         return self.get_minimum_feature_size_self_intersection(group='all')
