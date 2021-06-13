@@ -126,7 +126,14 @@ class Simulation():
         else:
             ranges = self.world.boundary.geometry.get_regular_grid_ranges(origin, spacing)
             #grid = self.world.boundary.geometry.create_regular_grid(origin, spacing)
-        grid = create_regular_grid(origin, spacing, ranges)
+        if "grid_spacing_gradient" in grid_kws:
+            gradient = grid_kws['grid_spacing_gradient']
+        else:
+            gradient = 0.
+        if 'debug' not in grid_kws:
+            grid_kws['debug'] = False
+        grid = create_regular_grid(origin, spacing, ranges, gradient=gradient,
+                                   debug=grid_kws['debug'])
         grid = order_blockwise_radially(grid)
         total_particles = 0
         if group == 'all':
