@@ -10,21 +10,25 @@ from starr.object_factory import clone
 
 class World():
 
-    def __init__(self, kwds, shape='Rectangle', type='Physical'):
+    def __init__(self, kwds, shape='Rectangle', boundary_type='Physical'):
         #self.shape = shape
         #self.boundary = self.create_geometrical_boundary(shape, kwds)
+        if 'shape' not in kwds:
+            kwds['shape'] = shape
+        if 'boundary_type' not in kwds:
+            kwds['boundary_type'] = boundary_type
         self.origin = np.zeros(2)
         self.buffer = None
         self.boundary = generate_object(kwds)
         self.boundary.static = True
         self.boundary.graphics.color = 'w'
-        self.type = type
-        if type == "Physical":
+        self.boundary_type = boundary_type
+        if boundary_type == "Physical":
             if 'buffer_thickness' not in kwds:
                 kwds['buffer_thickness'] = 5.
             thickness = kwds['buffer_thickness']
             self.create_buffer(thickness)
-        elif type == 'Periodic':
+        elif boundary_type == 'Periodic':
             self.set_periodic_conditions(kwds)
             #self.boundary.physics = None
             #self.create_physical_boundary(kwds)
@@ -43,9 +47,9 @@ class World():
                                       canvas)
 
     def update(self, object_groups):
-        if self.type == 'Physical':
+        if self.boundary_type == 'Physical':
             pass
-        elif self.type == 'Periodic':
+        elif self.boundary_type == 'Periodic':
             for group in object_groups:
                 self.cleanup_group(group)
                     #continue
