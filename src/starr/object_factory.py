@@ -5,7 +5,8 @@ from starr.graphics_component import GraphicsComponent
 from starr.misc import is_iterable
 import numpy as np
 def insert_defaults(keys):
-    default_keys = {'mass':1.0, 'color':'b'}
+    default_keys = {'mass':1.0, 'color':'b', 'fill':True,
+                    'edge_color':'k'}
     for key in default_keys:
         if key not in keys:
             keys[key] = default_keys[key]
@@ -24,20 +25,20 @@ def object_from_polygon(keys, polygon):
     insert_defaults(keys)
     geo = GeneralPolygon(polygon)
     phys = PhysicsComponent(keys['mass'])
-    graph = GraphicsComponent('b')
+    graph = GraphicsComponent(keys['color'], keys['fill'], keys['edge_color'])
     return SimulationObject(geo, phys, graph)
 
 def circle(keys):
     geo = Circle(keys['radius'])
     phys = PhysicsComponent(keys['mass'])
-    graph = GraphicsComponent(keys['color'])
+    graph = GraphicsComponent(keys['color'], keys['fill'], keys['edge_color'])
     return SimulationObject(geo, phys, graph)
 
 def rectangle(keys):
     geo = Rectangle(keys['side_length_a'],
                     keys['side_length_b'])
     phys = PhysicsComponent(keys['mass'])
-    graph = GraphicsComponent(keys['color'])
+    graph = GraphicsComponent(keys['color'], keys['fill'], keys['edge_color'])
     return SimulationObject(geo, phys, graph)
 
 def clone(sim_object):
