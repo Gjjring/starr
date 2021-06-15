@@ -134,6 +134,7 @@ class Circle(GeometryComponent):
         normal_dir = collision-self._position
         return normal_dir / np.linalg.norm(normal_dir)
 
+
 class Rectangle(GeometryComponent):
 
     def __init__(self, side_length_a, side_length_b):
@@ -169,31 +170,7 @@ class Rectangle(GeometryComponent):
         #y_up = y_steps_up*spacing
         #x = np.arange(x_left, x_right+spacing, spacing) + origin[0]
         #y = np.arange(y_down, y_up+spacing, spacing) + origin[1]
-"""
-    def create_regular_grid(self, origin, spacing, include_edges=False):
 
-        x0 = -self.side_length_a*.5
-        y0 = -self.side_length_b*.5
-
-        x1 = self.side_length_a*.5
-        y1 = self.side_length_b*.5
-
-        x_steps_left = np.ceil(x0 / spacing)
-        x_left = x_steps_left*spacing
-        x_steps_right = np.floor(x1 / spacing)
-        x_right = x_steps_right*spacing
-        y_steps_down = np.ceil(y0 / spacing)
-        y_down = y_steps_down*spacing
-        y_steps_up = np.floor(y1 / spacing)
-        y_up = y_steps_up*spacing
-        x = np.arange(x_left, x_right+spacing, spacing) + origin[0]
-        y = np.arange(y_down, y_up+spacing, spacing) + origin[1]
-        #x = np.linspace(x0, y1, n_rows)
-        #y = np.linspace(x0, y1, n_rows)
-        X, Y = np.meshgrid( x,y)
-        grid_points = np.vstack([X.flatten(),Y.flatten()]).T
-        return grid_points
-"""
 class GeneralPolygon(GeometryComponent):
 
     def __init__(self, polygon):
