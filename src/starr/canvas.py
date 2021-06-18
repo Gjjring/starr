@@ -35,7 +35,7 @@ class Canvas():
         if self.writer is None:
             raise ValueError("writer has not been initialised, try calling Canvas.saving()")
         self.writer.finish()
-        self.writer.cleanup()
+        #self.writer.cleanup()
 
     def report(self, messages):
         if self.report_text is None:

@@ -21,7 +21,10 @@ class World():
         self.buffer = None
         self.boundary = generate_object(kwds)
         self.boundary.static = True
-        self.boundary.graphics.color = 'w'
+        if 'color' not in kwds:
+            self.boundary.graphics.color = 'w'
+        else:
+            self.boundary.graphics.color = kwds['color']
         self.boundary_type = boundary_type
         if boundary_type == "Physical":
             if 'buffer_thickness' not in kwds:
@@ -35,7 +38,7 @@ class World():
 
     def create_buffer(self, thickness):
         buffer = self.boundary.geometry.make_buffer(thickness)
-        self.buffer = object_from_polygon({}, buffer)
+        self.buffer = object_from_polygon({'color':self.boundary.graphics.color}, buffer)        
         self.buffer.physics.mass = 1e21
         self.buffer.physics.static = True
 
