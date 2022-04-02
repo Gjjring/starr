@@ -198,3 +198,61 @@ class TopologySimulation(Simulation):
 
 
         return min_size
+
+    def get_vertices_union(self, group='all'):
+        """
+        For a group of objects or multiple object groups, create a union of all
+        objects and return a np.array of the vertices of the union.
+        """
+        if isinstance(group, int):
+            obj_list = self.object_groups[group].objects
+        else:
+            obj_list = self.all_objects()
+        #object_group = self.object_groups[group]
+
+        union, multi_poly = make_union(obj_list)
+        vertices = []
+        if multi_poly:
+            for poly in union:
+                for vertex in poly.exterior.coords:
+                    vertices.append([vertex[0], vertex[1]])
+        else:
+            exterior = union.exterior
+            for vertex in poly.exterior.coords:
+                vertices.append([vertex[0], vertex[1]])
+
+            for poly in union.interiors:
+                for vertex in poly.exterior.coords:
+                    vertices.append([vertex[0], vertex[1]])
+        return np.array(vertices), union
+
+    def list_blocks(self, group='all'):
+        """
+        For a group of objects or multiple object groups, create a union of all
+        objects and return a np.array of the vertices of the union.
+        """
+        if isinstance(group, int):
+            obj_list = self.object_groups[group].objects
+        else:
+            obj_list = self.all_objects()
+        #object_group = self.object_groups[group]
+        center_x = np.zeros(len(obj_list))
+        center_y = np.zeros(len(obj_list))
+        width_x = np.zeros(len(obj_list))
+        width_y = np.zeros(len(obj_list))
+
+        for iobj, obj in enumerate(obj_list):
+            center_x[iobj] = obj.geometry._position[0]
+            center_y[iobj] = obj.geometry._position[1]
+            width_x[iobj] = obj.geometry.side_length_a
+            width_y[iobj] = obj.geometry.side_length_b
+
+        data_dict = {'center_x':np.array(center_x),
+                    'center_y':np.array(center_y),
+                    'width_x':np.array(width_x),
+                    'width_y':np.array(width_y)}
+        return data_dict
+
+
+
+        return np.array(vertices), union
